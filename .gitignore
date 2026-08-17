@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+.env
+.env.*
+amap-config.local.js
+node_modules/
+dist/
