@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>草蛇灰线 greystrider 多地点旅行路线规划工具</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="planner-panel" aria-label="路线输入">
+        <div class="brand-block">
+          <p class="eyebrow">greystrider</p>
+          <h1>草蛇灰线</h1>
+          <p class="subcopy">输入起点、终点和候选地点，先在地图上筛选，再生成包含步行、骑行、公交/地铁的分段路线。</p>
+        </div>
+
+        <form id="placeForm" class="place-form">
+          <label>
+            城市
+            <input id="cityInput" type="text" value="上海" autocomplete="off" />
+          </label>
+          <div class="paired-fields">
+            <label>
+              起点
+              <input id="startInput" type="text" value="人民广场" autocomplete="off" />
+            </label>
+            <label>
+              终点
+              <input id="endInput" type="text" value="外滩" autocomplete="off" />
+            </label>
+          </div>
+          <div class="candidate-fieldset">
+            <div class="field-label">候选地点</div>
+            <div id="candidateInputs" class="candidate-inputs"></div>
+            <button id="addPlaceBtn" class="add-place-button" type="button" aria-label="新增候选地点">+</button>
+          </div>
+          <button class="primary-button" type="submit">在地图上查看地点</button>
+        </form>
+
+        <div class="selection-summary">
+          <div>
+            <span class="summary-label">已选地点</span>
+            <strong id="selectedCount">0</strong>
+          </div>
+          <button id="buildRouteBtn" class="secondary-button" type="button" disabled>确认生成路线</button>
+        </div>
+
+        <section class="route-panel" aria-label="路线结果">
+          <div class="route-heading">
+            <h2>推荐路线</h2>
+            <span id="routeMeta">等待选择地点</span>
+          </div>
+          <ol id="routeList" class="route-list"></ol>
+        </section>
+      </section>
+
+      <section class="map-workspace" aria-label="地图与地点选择">
+        <div class="toolbar">
+          <div>
+            <p class="toolbar-title">地点地图</p>
+            <p id="mapHint">点击候选地点进行选择，起点和终点已固定。</p>
+          </div>
+          <div class="legend">
+            <span><i class="dot fixed"></i>起终点</span>
+            <span><i class="dot candidate"></i>候选</span>
+            <span><i class="dot selected"></i>已选</span>
+          </div>
+        </div>
+        <div id="mapCanvas" class="map-canvas"></div>
+      </section>
+    </main>
+
+    <script src="./amap-config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
