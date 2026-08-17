@@ -53,11 +53,14 @@ function hashPosition(name, index) {
   };
 }
 
-function loadAmap() {
-  if (!amapConfig.jsApiKey) return Promise.reject(new Error("AMap key is missing"));
+async function loadAmap() {
+  await resolveAmapConfig();
+  if (!amapConfig.jsApiKey) throw new Error("AMap key is missing");
   if (window.AMap) return Promise.resolve(window.AMap);
 
-  if (amapConfig.securityJsCode) {
+  if (amapConfig.serviceHost) {
+    window._AMapSecurityConfig = { serviceHost: amapConfig.serviceHost };
+  } else if (amapConfig.securityJsCode) {
     window._AMapSecurityConfig = { securityJsCode: amapConfig.securityJsCode };
   }
 
@@ -69,6 +72,20 @@ function loadAmap() {
     script.onerror = () => reject(new Error("AMap script failed to load"));
     document.head.appendChild(script);
   });
+}
+
+async function resolveAmapConfig() {
+  if (amapConfig.jsApiKey || !amapConfig.configEndpoint) return;
+
+  const response = await fetch(amapConfig.configEndpoint, {
+    headers: { Accept: "application/json" },
+    cache: "no-store"
+  });
+  if (!response.ok) throw new Error("AMap deployment config is unavailable");
+
+  const deploymentConfig = await response.json();
+  amapConfig.jsApiKey = deploymentConfig.jsApiKey || "";
+  amapConfig.serviceHost = deploymentConfig.serviceHost || "";
 }
 
 async function ensureRealMap(city) {
