@@ -27,9 +27,28 @@ python -m http.server 4173
 
 ## 地图配置与安全
 
-仓库中的 `amap-config.js` 只保留空白配置，未包含任何真实 Key 或安全密钥。需要连接真实地图时，请在自己的部署流程中注入配置，并在高德开放平台设置域名白名单和调用配额限制。
+仓库中的 `amap-config.js` 只保留公开运行配置，未包含任何真实 Key 或安全密钥。线上版本通过 Vercel Functions 提供两层保护：
+
+- `/api/amap-config` 在运行时返回受域名限制的 Web 端 JS Key。
+- `/_AMapService` 将地图服务请求转发到高德，并仅在服务端附加 `securityJsCode`。
+
+部署到 Vercel 时需要配置以下环境变量：
+
+```text
+AMAP_JS_API_KEY
+AMAP_SECURITY_JS_CODE
+```
+
+请在高德开放平台将 JS Key 的域名白名单限制为正式 Vercel 域名，并根据需要设置调用配额。
 
 不要把真实凭据提交到 Git、README、Issue、截图或公开部署日志中。如果凭据曾经进入公开仓库，请立即在高德开放平台轮换。
+
+## Vercel 部署
+
+1. 在 Vercel 导入本 GitHub 仓库。
+2. Framework Preset 选择 `Other`，根目录保持仓库根目录。
+3. 在项目环境变量中添加上述两个变量，并勾选 Production。
+4. 部署完成后，将正式域名添加到高德 Key 的域名白名单，再重新部署一次。
 
 ## AI 协作
 
@@ -41,4 +60,3 @@ python -m http.server 4173
 - 支持少换乘、少步行、优先骑行等个性化偏好。
 - 支持行程保存、分享与多人协作。
 - 逐步迁移为微信小程序，形成可在旅行途中持续使用的轻量工具。
-
