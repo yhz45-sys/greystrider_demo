@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/_AMapService/:path*",
+      "destination": "/api/amap-proxy?path=:path*"
+    }
+  ]
+}
